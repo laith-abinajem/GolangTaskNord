@@ -1,0 +1,35 @@
+services:
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    container_name: redis
+    env_file:
+      - .env
+    ports:
+      - '6379:6379'
+    volumes:
+      - ${REDIS_VOLUME}:/var/lib/redis
+    networks:
+      - task_network
+
+  mysql:
+    image: mysql:8.0.19
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: "Asia/Amman"
+    ports:
+      - 3306:3306
+    volumes:
+      - ${MYSQL_VOLUME}:/var/lib/mysql
+    networks:
+      - task_network
+
+networks:
+  task_network:
+    name: tas
